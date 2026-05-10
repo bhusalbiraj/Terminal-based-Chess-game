@@ -4,15 +4,14 @@
 #include <algorithm>
 using namespace std;
 
-// ─────────────────────────────────────────────
 //  PAWN
-// ─────────────────────────────────────────────
+
 bool isValidPawnMove(char board[8][8], int fromRow, int toRow, int fromCol, int toCol, bool isWhite) {
     // direction: white moves up (row decreases), black moves down (row increases)
     int dir        = isWhite ? -1 : 1;
     int startRow   = isWhite ?  6 :  1;   // row index where pawns begin
 
-    // ── Diagonal capture ──────────────────────
+    // Diagonal capture 
     if (toRow == fromRow + dir && abs(toCol - fromCol) == 1) {
         char target = board[toRow][toCol];
         if (target == '.') return false;                      // nothing to capture
@@ -21,7 +20,7 @@ bool isValidPawnMove(char board[8][8], int fromRow, int toRow, int fromCol, int 
         return false;                                         // can't capture own piece
     }
 
-    // ── Straight moves (column must stay same) ─
+    // Straight moves (column must stay same)
     if (toCol != fromCol) return false;
 
     // one step forward
@@ -38,9 +37,8 @@ bool isValidPawnMove(char board[8][8], int fromRow, int toRow, int fromCol, int 
     return false;
 }
 
-// ─────────────────────────────────────────────
 //  ROOK
-// ─────────────────────────────────────────────
+
 bool isValidRookMove(char board[8][8], int fromRow, int toRow, int fromCol, int toCol) {
     // can't capture own piece
     if ((isupper(board[fromRow][fromCol]) && isupper(board[toRow][toCol])) ||
@@ -64,9 +62,8 @@ bool isValidRookMove(char board[8][8], int fromRow, int toRow, int fromCol, int 
     return true;
 }
 
-// ─────────────────────────────────────────────
 //  KNIGHT
-// ─────────────────────────────────────────────
+
 bool isValidKnightMove(char board[8][8], int fromRow, int toRow, int fromCol, int toCol) {
     // can't capture own piece
     if ((isupper(board[fromRow][fromCol]) && isupper(board[toRow][toCol])) ||
@@ -79,9 +76,8 @@ bool isValidKnightMove(char board[8][8], int fromRow, int toRow, int fromCol, in
     return (dr == 1 && dc == 2) || (dr == 2 && dc == 1);
 }
 
-// ─────────────────────────────────────────────
 //  BISHOP
-// ─────────────────────────────────────────────
+
 bool isValidBishopMove(char board[8][8], int fromRow, int toRow, int fromCol, int toCol) {
     // can't capture own piece
     if ((isupper(board[fromRow][fromCol]) && isupper(board[toRow][toCol])) ||
@@ -106,9 +102,8 @@ bool isValidBishopMove(char board[8][8], int fromRow, int toRow, int fromCol, in
     return true;
 }
 
-// ─────────────────────────────────────────────
 //  KING  (one step in any direction)
-// ─────────────────────────────────────────────
+
 bool isValidKingMove(char board[8][8], int fromRow, int toRow, int fromCol, int toCol) {
     // can't capture own piece
     if ((isupper(board[fromRow][fromCol]) && isupper(board[toRow][toCol])) ||
@@ -121,9 +116,8 @@ bool isValidKingMove(char board[8][8], int fromRow, int toRow, int fromCol, int 
     return dr <= 1 && dc <= 1 && (dr + dc) > 0;
 }
 
-// ─────────────────────────────────────────────
 //  QUEEN  (rook + bishop combined)
-// ─────────────────────────────────────────────
+
 bool isValidQueenMove(char board[8][8], int fromRow, int toRow, int fromCol, int toCol) {
     // can't capture own piece
     if ((isupper(board[fromRow][fromCol]) && isupper(board[toRow][toCol])) ||
@@ -136,9 +130,8 @@ bool isValidQueenMove(char board[8][8], int fromRow, int toRow, int fromCol, int
            isValidBishopMove(board, fromRow, toRow, fromCol, toCol);
 }
 
-// ─────────────────────────────────────────────
 //  UTILITY: find king of a given color
-// ─────────────────────────────────────────────
+
 bool findKing(char board[8][8], bool isWhite, int &kingRow, int &kingCol) {
     char kingChar = isWhite ? 'K' : 'k';
     for (int r = 0; r < 8; r++)
@@ -150,9 +143,8 @@ bool findKing(char board[8][8], bool isWhite, int &kingRow, int &kingCol) {
     return false;   // king not on board (shouldn't happen in a normal game)
 }
 
-// ─────────────────────────────────────────────
 //  Is a square under attack by the opponent?
-// ─────────────────────────────────────────────
+
 bool isSquareUnderAttack(char board[8][8], int kingRow, int kingCol, bool kingIsWhite) {
     for (int r = 0; r < 8; r++) {
         for (int c = 0; c < 8; c++) {
@@ -185,9 +177,8 @@ bool isSquareUnderAttack(char board[8][8], int kingRow, int kingCol, bool kingIs
     return false;
 }
 
-// ─────────────────────────────────────────────
 //  Does making a move leave our own king in check?
-// ─────────────────────────────────────────────
+
 bool moveLeavesKingInCheck(char board[8][8], int fromRow, int fromCol, int toRow, int toCol, bool isWhite) {
     // Make the move on a temporary board
     char temp[8][8];
@@ -203,10 +194,9 @@ bool moveLeavesKingInCheck(char board[8][8], int fromRow, int fromCol, int toRow
     return isSquareUnderAttack(temp, kingRow, kingCol, isWhite);
 }
 
-// ─────────────────────────────────────────────
 //  Does the given side have ANY legal move?
 //  (used to detect checkmate vs stalemate)
-// ─────────────────────────────────────────────
+
 bool hasNoLegalMoves(char board[8][8], bool isWhite) {
     for (int fr = 0; fr < 8; fr++) {
         for (int fc = 0; fc < 8; fc++) {

@@ -4,9 +4,8 @@
 #include "piece.h"
 using namespace std;
 
-// ─────────────────────────────────────────────
 //  Board printer
-// ─────────────────────────────────────────────
+
 void printboard(char board[8][8]) {
     cout << endl;
     for (int i = 0; i < 8; i++) {
@@ -22,9 +21,8 @@ void printboard(char board[8][8]) {
     cout << endl << endl;
 }
 
-// ─────────────────────────────────────────────
 //  Parse "a2" -> row/col indices
-// ─────────────────────────────────────────────
+
 bool parseSquare(const string &s, int &row, int &col) {
     if (s.size() < 2) return false;
     col = s[0] - 'a';
@@ -32,9 +30,8 @@ bool parseSquare(const string &s, int &row, int &col) {
     return col >= 0 && col < 8 && row >= 0 && row < 8;
 }
 
-// ─────────────────────────────────────────────
 //  Pawn promotion (auto-promote to queen)
-// ─────────────────────────────────────────────
+
 void handlePromotion(char board[8][8]) {
     for (int c = 0; c < 8; c++) {
         if (board[0][c] == 'P') board[0][c] = 'Q';   // white pawn reached rank 8
@@ -42,9 +39,8 @@ void handlePromotion(char board[8][8]) {
     }
 }
 
-// ─────────────────────────────────────────────
 //  MAIN
-// ─────────────────────────────────────────────
+
 int main() {
     char board[8][8];
 
@@ -79,7 +75,7 @@ int main() {
 
     while (true) {
 
-        // ── Check / Checkmate / Stalemate detection ──────────────────
+        // ── Check / Checkmate / Stalemate detection 
         int kingRow, kingCol;
         findKing(board, isWhite, kingRow, kingCol);
         bool inCheck = isSquareUnderAttack(board, kingRow, kingCol, isWhite);
@@ -96,7 +92,7 @@ int main() {
         if (inCheck)
             cout << "\n⚠  " << (isWhite ? "White" : "Black") << " is in CHECK!\n";
 
-        // ── Prompt ───────────────────────────────────────────────────
+        // ── Prompt 
         cout << (isWhite ? "\nWhite" : "\nBlack")
              << "'s turn. Enter move (e.g. e2 e4): ";
 
@@ -109,7 +105,7 @@ int main() {
             continue;
         }
 
-        // ── Basic sanity checks ──────────────────────────────────────
+        // ── Basic sanity checks
         char piece = board[fromRow][fromCol];
 
         if (piece == '.') {
@@ -125,7 +121,7 @@ int main() {
             continue;
         }
 
-        // ── Validate move for the piece type ────────────────────────
+        // Validate move for the piece type
         char p = tolower(piece);
         bool valid = false;
 
@@ -141,14 +137,13 @@ int main() {
             continue;
         }
 
-        // ── Make sure the move doesn't leave own king in check ───────
+        // ── Make sure the move doesn't leave own king in check 
         if (moveLeavesKingInCheck(board, fromRow, fromCol, toRow, toCol, isWhite)) {
             cout << "That move leaves your King in check! Try again.\n";
             continue;
         }
 
-        // ── Check if we are capturing the enemy king (should not normally
-        //    happen with proper check detection, but kept as a safety net) ─
+        // Check if we are capturing the enemy king (should not normally happen with proper check detection, but kept as a safety net) ─
         char captured = board[toRow][toCol];
         if (captured == 'k' || captured == 'K') {
             board[toRow][toCol]     = board[fromRow][fromCol];
@@ -159,7 +154,7 @@ int main() {
             break;
         }
 
-        // ── Apply the move ───────────────────────────────────────────
+        //  Apply the move 
         board[toRow][toCol]     = board[fromRow][fromCol];
         board[fromRow][fromCol] = '.';
 
