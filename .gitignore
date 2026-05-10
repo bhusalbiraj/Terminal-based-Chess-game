@@ -1,0 +1,5 @@
+.vscode/
+build/
+output/
+*.code-workspace
+chess
